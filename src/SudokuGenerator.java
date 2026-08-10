@@ -27,10 +27,11 @@ public class SudokuGenerator {
         // work out the next cell to move to after this one
         int nextRow = (col == 8) ? row + 1 : row;
         int nextCol = (col == 8) ? 0 : col + 1;
+        SudokuValidator sudokuValidator = new SudokuValidator();
 
         List<Integer> numbers = shuffledDigits();
         for (int value : numbers) {
-            if (SudokuValidator.isValidMove(board, row, col, value)) {
+            if (sudokuValidator.isValidMove(board, row, col, value)) {
                 board[row][col] = value;
                 if (fillBoard(board, nextRow, nextCol)) {
                     return true; // rest of the board filled successfully
