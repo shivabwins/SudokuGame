@@ -1,83 +1,111 @@
 public class SudokuBoard {
-
-    // Instance variables
-    private int[][] board;
+    public static final int SIZE = 9;
+    private int [][] board;
     private int[][] originalBoard;
 
-    // Constructor
-    public SudokuBoard() {
-        board = new int[9][9];
-        originalBoard = new int[9][9];
+    // constructors
+    // This sets the board to a 9*9 grid
+    public SudokuBoard(){
+        board = new int [SIZE][SIZE];
+        originalBoard = new int [SIZE][SIZE];
+    }
+    // this receives whichever puzzle is loaded
+    // it runs the loadboard method and gives it the puzzle
+    public SudokuBoard(int [][] puzzle){
+        loadBoard(puzzle);
     }
 
-    // Getters
-    public int[][] getBoard() {
+    // getters and setters
+    public int [][] getBoard(){
         return board;
     }
-
-    public int[][] getOriginalBoard() {
+    public int [][] getOriginalBoard(){
         return originalBoard;
     }
 
-    // Setters
-    public void setBoard(int[][] board) {
+    public void setBoard(){
         this.board = board;
     }
-
-    public void setOriginalBoard(int[][] originalBoard) {
-        this.originalBoard = originalBoard;
+    public void setOrigalBoard(){
+        this.originalBoard = board;
     }
 
-    // Display the board
-    public void displayBoard() {
-
-        for (int row = 0; row < board.length; row++) {
-
-            for (int col = 0; col < board[row].length; col++) {
-
-                System.out.print(board[row][col] + " ");
-
+    // methods required
+    // it doesnt return a value as it only changes the exisited and orginalboard therefore void
+    // it takes parameters becuase it needs information from you
+    // return, stops and exits out of the loadboard method (EXIT)
+    public void loadBoard(int [][] newBoard){
+        if (newBoard == null || newBoard.length != SIZE || newBoard[0].length != SIZE){
+            System.out.println("INVALID BOARD. Could not load puzzle");
+            return;
+        }
+        // loads a new 9*9 board
+        board = new int [SIZE][SIZE];
+        originalBoard = new int[SIZE][SIZE];
+        for(int row = 0; row < SIZE; row++){
+            for(int col =0; col <SIZE; col++){
+                board[row][col]=newBoard[row][col];
+                originalBoard[row][col]=newBoard[row][col];
             }
-
-            System.out.println();
         }
     }
-    //load board, this loads the board with the numbers generaratred before displaying and also saves a copy for the orginal board if reset is needed
-
-    public void loadBoard(int [][] puzzle){
-        for (int row = 0; row < board.length; row++) {
-
-            for (int col = 0; col < board[row].length; col++) {
-
-                board[row][col] = puzzle[row][col];
-                originalBoard[row][col] = puzzle[row][col];
-
+    // this prints the string and divider lines every 3rd row/column
+    // +1 is because the array starts from 0
+    public void displayBoard(){
+        System.out.println("+-------+-------+-------+");
+        for(int row =0; row < SIZE; row++){
+            StringBuilder line = new StringBuilder("|");
+            for(int col =0; col <SIZE ; col++){
+                line.append(" ").append(board[row][col]);
+                if((col + 1)%3==0){
+                    line.append(" |");
+                }
             }
-
-        }
-
-    }
-    // This is for the setting of values when player plays, changes to specific number
-    public void setValue(int row, int col, int value){
-        board [row][col]= value;
-    }
-    // Resets the board back to the original puzzle state.
-// We loop through every cell and copy the value from originalBoard
-// back into board — this undoes any moves the player has made.
-    public void resetBoard() {
-        for (int row = 0; row < board.length; row++) {
-            for (int col = 0; col < board[row].length; col++) {
-                board[row][col] = originalBoard[row][col];
+            System.out.println(line);
+            if((row + 1)%3==0){
+                System.out.println("+-------+-------+-------+");
             }
         }
     }
 
-    // Checks whether a cell is allowed to be edited by the player.
-// A cell was "pre-filled" by the puzzle if originalBoard has a
-// non-zero value there — those cells must stay locked forever.
-// If originalBoard is 0 at that position, it was empty to begin
-// with, so the player is free to write into it.
-    public boolean isCellEditable(int row, int col) {
-        return originalBoard[row][col] == 0;
+    // updates cell or prints error so its void
+    // takes parameters as it requires row col and value from user
+    public void setValue(int row, int col, int value) {
+        if (row < 0 || row >= SIZE || col < 0 || col >= SIZE) {
+            System.out.println("Invalid position. Row and column must be between 1 and 9.");
+            return;
+        }
+        if (!isCellEditable(row, col)) {
+            System.out.println("This cell is pre-filled and cannot be modified.");
+            return;
+        }
+        board[row][col] = value;
     }
+
+    // return true or false instead of void
+    // takes parameters as it requires user input
+    public boolean isCellEditable(int row, int col){
+        if(row < 0 || row >= SIZE|| col < 0 || col >= SIZE){
+            return false;
+        }
+        if(originalBoard[row][col] == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // copies original board back over board
+    public void resetBoard(){
+        for(int row = 0; row < SIZE; row++){
+            for(int col =0; col <SIZE; col++){
+                board[row][col]=originalBoard[row][col];
+            }
+        }
+        System.out.println("Board has been reset.");
+    }
+
+
+
+
 }
